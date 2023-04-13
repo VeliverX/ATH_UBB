@@ -12,13 +12,13 @@ namespace ATH_UBB.Controllers
 {
     public class VehicleItemController : Controller
     {
-        //private readonly IVehicleRepository _Vehiclecontext;
+        private readonly  _Vehiclecontext;
 
 
-        //public VehicleItemController(IVehicleRepository context)
-        //{
-        //    _Vehiclecontext = context;
-        //}
+        public VehicleItemController(IVehicleRepository context)
+        {
+            _Vehiclecontext = context;
+        }
         static List<VehicleItemViewModel> vehicle = new List<VehicleItemViewModel>
         {
             new VehicleItemViewModel(){ Id = Guid.NewGuid(), isAvailable = true, localization="cos", model="cos", price = 1}
@@ -52,6 +52,7 @@ namespace ATH_UBB.Controllers
         // GET: VehicleItemController/Details/5
         public ActionResult Details(int id)
         {
+
             return View();
         }
 

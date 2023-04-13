@@ -1,6 +1,9 @@
 using ATH_UBB.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ATH_UBB.Service;
+using IRepositoryService;
+using RepositoryService;
 
 namespace ATH_UBB
 {
@@ -19,8 +22,7 @@ namespace ATH_UBB
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-            //builder.Services.AddScoped(typeof(IVehicleRepository), typeof(VehicleRepository));
-            //builder.Services.AddScoped(typeof(IRentalPointRepository), typeof(RentalPointRepository));
+            builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
