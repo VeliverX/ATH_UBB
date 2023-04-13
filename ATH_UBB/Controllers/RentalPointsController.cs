@@ -68,7 +68,7 @@ namespace ATH_UBB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Adres,City")] RentalPoint rentalPoint)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) //TO DO naprwić bo wykrzyknik by działało 
             {
                 rentalPoint.Id = Guid.NewGuid();
                 _context.Add(rentalPoint);
