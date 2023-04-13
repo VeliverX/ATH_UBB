@@ -1,5 +1,6 @@
 ﻿using ATH_UBB.Data;
 using ATH_UBB.Models;
+using ATH_UBB.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,21 +8,22 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using System.Drawing.Drawing2D;
 using System.Security.Cryptography.X509Certificates;
+using IRepositoryService;
 
 namespace ATH_UBB.Controllers
 {
     public class VehicleItemController : Controller
     {
-        private readonly  _Vehiclecontext;
+        private readonly IRepositoryService<Vehicle>  _Vehiclecontext;
 
 
-        public VehicleItemController(IVehicleRepository context)
+        public VehicleItemController(IRepositoryService<Vehicle> context)
         {
             _Vehiclecontext = context;
         }
         static List<VehicleItemViewModel> vehicle = new List<VehicleItemViewModel>
         {
-            new VehicleItemViewModel(){ Id = Guid.NewGuid(), isAvailable = true, localization="cos", model="cos", price = 1}
+            new VehicleItemViewModel(){ }
         };
        
 
