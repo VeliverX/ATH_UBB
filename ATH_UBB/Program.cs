@@ -28,6 +28,7 @@ namespace ATH_UBB
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
             builder.Services.AddScoped(typeof(IValidator<VehicleDetailViewModel>), typeof(VehicleDetailValidator));
+            builder.Services.AddScoped(typeof(IValidator<RentalPointViewModel>), typeof(RentalPointValidator));
             builder.Services.AddAutoMapper(typeof(VehicleProfile), typeof(RentalPoiontProfile));
             var app = builder.Build();
 

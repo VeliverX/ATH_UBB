@@ -9,15 +9,20 @@ using ATH_UBB.Data;
 using ATH_UBB.Model;
 using IRepositoryService;
 using RepositoryService;
+using AutoMapper;
+using FluentValidation;
+using ATH_UBB.Models;
+using FluentValidation.Results;
 
 namespace ATH_UBB.Controllers
 {
     public class RentalPointsController : Controller
     {
         private readonly IRepositoryService<RentalPoint> _context;
+        private readonly IMapper _mapper;
+        private readonly IValidator<RentalPointViewModel> _validator;
 
-       
-        public RentalPointsController(ApplicationDbContext context)
+        public RentalPointsController(ApplicationDbContext context, IMapper mapper, IValidator<RentalPointViewModel> validator)
         {
             _context = new RepositoryService<RentalPoint>(context);
             _context.Add(new RentalPoint()
@@ -28,13 +33,20 @@ namespace ATH_UBB.Controllers
                 Vehicles = new List<Vehicle>()
                
             });
+            _mapper = mapper;
+            _validator = validator;
         }
 
         // GET: RentalPoints
         public async Task<IActionResult> Index()
         {
               var RentalPointIndex =  _context.GetAllRecords();
-            return View(await RentalPointIndex.ToListAsync()); 
+            List<RentalPointViewModel> rentalPointViewModelIndex = new List<RentalPointViewModel>();
+            foreach (var item in RentalPointIndex)
+            {
+                rentalPointViewModelIndex.Add(_mapper.Map<RentalPointViewModel>(item));
+            }
+            return View(rentalPointViewModelIndex); 
         }
 
         // GET: RentalPoints/Details/5
@@ -52,7 +64,7 @@ namespace ATH_UBB.Controllers
                 return NotFound();
             }
 
-            return View(rentalPoint);
+            return View(_mapper.Map<RentalPointViewModel>(rentalPoint));
         }
 
         // GET: RentalPoints/Create
@@ -66,15 +78,17 @@ namespace ATH_UBB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Adres,City")] RentalPoint rentalPoint)
+        public async Task<IActionResult> Create([Bind("Id,Adres,City")] RentalPointViewModel rentalPoint)
         {
-            if (!ModelState.IsValid) //TO DO naprwić bo wykrzyknik by działało 
+            ValidationResult result = await _validator.ValidateAsync(rentalPoint);
+            if (result.IsValid) //TO DO naprwić bo wykrzyknik by działało 
             {
                 rentalPoint.Id = Guid.NewGuid();
-                _context.Add(rentalPoint);
+                _context.Add(_mapper.Map<RentalPoint>(rentalPoint));
                 _context.Save();
                 return RedirectToAction(nameof(Index));
             }
+            result.Errors.ForEach(error => ModelState.AddModelError(error.PropertyName, error.ErrorMessage));
             return View(rentalPoint);
         }
 
@@ -91,7 +105,7 @@ namespace ATH_UBB.Controllers
             {
                 return NotFound();
             }
-            return View(rentalPoint);
+            return View(_mapper.Map<RentalPointViewModel>(rentalPoint));
         }
 
         // POST: RentalPoints/Edit/5
@@ -99,7 +113,7 @@ namespace ATH_UBB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Adres,City")] RentalPoint rentalPoint)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Adres,City")] RentalPointViewModel rentalPoint)
         {
             if (id != rentalPoint.Id)
             {
@@ -110,7 +124,7 @@ namespace ATH_UBB.Controllers
             {
                 try
                 {
-                    _context.Edit(rentalPoint);
+                    _context.Edit(_mapper.Map<RentalPoint>(rentalPoint));
                     _context.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -126,7 +140,7 @@ namespace ATH_UBB.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(rentalPoint);
+            return View(_mapper.Map<RentalPoint>(rentalPoint));
         }
 
         // GET: RentalPoints/Delete/5
@@ -143,7 +157,7 @@ namespace ATH_UBB.Controllers
                 return NotFound();
             }
 
-            return View(rentalPoint);
+            return View(_mapper.Map<RentalPointViewModel>(rentalPoint));
         }
 
         // POST: RentalPoints/Delete/5

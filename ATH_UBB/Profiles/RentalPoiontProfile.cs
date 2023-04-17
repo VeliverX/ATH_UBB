@@ -8,8 +8,9 @@ namespace ATH_UBB.Profiles
     {
         public RentalPoiontProfile()
         {
-            CreateMap<RentalPoint, RentalPoionViewModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(x=> x.City + " " + x.Adres));
-            CreateMap<RentalPoionViewModel, RentalPoint>().ForMember(dest => dest.Vehicles, opt => opt.Ignore());
+            CreateMap<RentalPoint, RentalPointViewModel>().ForMember(dest => dest.City, opt => opt.MapFrom(x=> x.City))
+                .ForMember(dest => dest.Adres, opt => opt.MapFrom(x => x.Adres));
+            CreateMap<RentalPointViewModel, RentalPoint>().ForMember(dest => dest.Vehicles, opt => opt.Ignore());
         }
     }
 }

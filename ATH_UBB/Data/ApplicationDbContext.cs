@@ -19,6 +19,7 @@ namespace ATH_UBB.Data
         public DbSet<RentalPoint> RentalPoints { get; set; }
         public DbSet<ATH_UBB.Models.VehicleItemViewModel>? VehicleItemViewModel { get; set; }
         public DbSet<ATH_UBB.Models.VehicleDetailViewModel>? VehicleDetailViewModel { get; set; }
+        public DbSet<ATH_UBB.Models.RentalPointViewModel>? RentalPoionViewModel { get; set; }
 
     }
 }
