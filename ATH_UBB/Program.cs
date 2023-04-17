@@ -5,6 +5,10 @@ using ATH_UBB.Service;
 using IRepositoryService;
 using RepositoryService;
 using ATH_UBB.Profiles;
+using FluentValidation;
+using ATH_UBB.Validation;
+using ATH_UBB.Models;
+
 namespace ATH_UBB
 {
     public class Program
@@ -23,6 +27,7 @@ namespace ATH_UBB
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+            builder.Services.AddScoped(typeof(IValidator<VehicleDetailViewModel>), typeof(VehicleDetailValidator));
             builder.Services.AddAutoMapper(typeof(VehicleProfile), typeof(RentalPoiontProfile));
             var app = builder.Build();
 

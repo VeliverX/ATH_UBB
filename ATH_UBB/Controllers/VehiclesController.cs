@@ -11,6 +11,8 @@ using IRepositoryService;
 using RepositoryService;
 using AutoMapper;
 using ATH_UBB.Models;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace ATH_UBB.Controllers
 {
@@ -18,7 +20,8 @@ namespace ATH_UBB.Controllers
     {
         private readonly IRepositoryService<Vehicle> _context;
         private readonly IMapper _mapper;
-        public VehiclesController(ApplicationDbContext context, IMapper mapper)
+        private readonly IValidator<VehicleDetailViewModel> _validator;
+        public VehiclesController(ApplicationDbContext context, IMapper mapper, IValidator<VehicleDetailViewModel> validator)
         {
             _context = new RepositoryService<Vehicle>(context);
 
@@ -35,7 +38,7 @@ namespace ATH_UBB.Controllers
 
             });
             _mapper = mapper;
-            
+            _validator = validator;
         }
 
         // GET: Vehicles
@@ -85,16 +88,24 @@ namespace ATH_UBB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,price,brand,model,localization,description,isAvailable")] VehicleDetailViewModel vehicle)
         {
-            if (ModelState.IsValid)
+
+            ValidationResult result = await _validator.ValidateAsync(vehicle);
+
+            if (result.IsValid)
             {
                 vehicle.Id = Guid.NewGuid();
                 _context.Add(_mapper.Map<Vehicle>(vehicle));
                 _context.Save();
+                
                 return RedirectToAction(nameof(Index));
+
             }
+            result.Errors.ForEach(error => ModelState.AddModelError(error.PropertyName, error.ErrorMessage));
+            return View(vehicle);
+
             //ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "Id", vehicle.ReservationId);
             //ViewData["TypeId"] = new SelectList(_context.VehicleTypes, "Id", "Id", vehicle.TypeId);
-            return View(_mapper.Map<VehicleDetailViewModel>(vehicle));
+
         }
 
         // GET: Vehicles/Edit/5
