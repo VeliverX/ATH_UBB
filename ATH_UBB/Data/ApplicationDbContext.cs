@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using ATH_UBB.Models;
 
 namespace ATH_UBB.Data
 {
@@ -16,6 +17,8 @@ namespace ATH_UBB.Data
         public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<RentalPoint> RentalPoints { get; set; }
+        public DbSet<ATH_UBB.Models.VehicleItemViewModel>? VehicleItemViewModel { get; set; }
+        public DbSet<ATH_UBB.Models.VehicleDetailViewModel>? VehicleDetailViewModel { get; set; }
 
     }
 }

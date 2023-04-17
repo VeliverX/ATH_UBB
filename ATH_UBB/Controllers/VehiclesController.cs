@@ -9,14 +9,16 @@ using ATH_UBB.Data;
 using ATH_UBB.Model;
 using IRepositoryService;
 using RepositoryService;
+using AutoMapper;
+using ATH_UBB.Models;
 
 namespace ATH_UBB.Controllers
 {
     public class VehiclesController : Controller
     {
         private readonly IRepositoryService<Vehicle> _context;
-
-        public VehiclesController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public VehiclesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = new RepositoryService<Vehicle>(context);
 
@@ -27,10 +29,12 @@ namespace ATH_UBB.Controllers
                 Brand = "makita",
                 Description = " super rower",
                 Price = 999,
-                Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"}
+                Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"},
+                RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City="Kety"}
+                
 
             });
-                
+            _mapper = mapper;
             
         }
 
@@ -38,13 +42,19 @@ namespace ATH_UBB.Controllers
         public async Task<IActionResult> Index()
         {
             var VehicleIndex = _context.GetAllRecords();
-            return View(await VehicleIndex.ToListAsync());
+            List<VehicleItemViewModel> vehiclesViewModelsIndex = new List<VehicleItemViewModel>();
+            foreach (var item in VehicleIndex)
+            {
+                vehiclesViewModelsIndex.Add(_mapper.Map<VehicleItemViewModel>(item));
+            }
+
+            return View(vehiclesViewModelsIndex);
         }
 
         // GET: Vehicles/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.GetAllRecords() == null)
+            if ( _context.GetAllRecords() == null)
             {
                 return NotFound();
             }
@@ -58,7 +68,7 @@ namespace ATH_UBB.Controllers
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(_mapper.Map<VehicleDetailViewModel>(vehicle));
         }
 
         // GET: Vehicles/Create
@@ -73,18 +83,18 @@ namespace ATH_UBB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Brand,Price,Description,TypeId,ReservationId,RentalId")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("Id,price,brand,model,localization,description,isAvailable")] VehicleDetailViewModel vehicle)
         {
             if (ModelState.IsValid)
             {
                 vehicle.Id = Guid.NewGuid();
-                _context.Add(vehicle);
+                _context.Add(_mapper.Map<Vehicle>(vehicle));
                 _context.Save();
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "Id", vehicle.ReservationId);
             //ViewData["TypeId"] = new SelectList(_context.VehicleTypes, "Id", "Id", vehicle.TypeId);
-            return View(vehicle);
+            return View(_mapper.Map<VehicleDetailViewModel>(vehicle));
         }
 
         // GET: Vehicles/Edit/5
@@ -94,15 +104,18 @@ namespace ATH_UBB.Controllers
             {
                 return NotFound();
             }
-
-            var vehicle =  _context.GetSingle(id);
+            var vehicle = _context.GetAllRecords()
+                .Include(v => v.Reserv)
+                .Include(v => v.Type)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            //var vehicle =  _context.GetSingle(id).;
             if (vehicle == null)
             {
                 return NotFound();
             }
             //ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "Id", vehicle.ReservationId);
             //ViewData["TypeId"] = new SelectList(_context.VehicleTypes, "Id", "Id", vehicle.TypeId);
-            return View(vehicle);
+            return View(_mapper.Map<VehicleDetailViewModel>(vehicle));
         }
 
         // POST: Vehicles/Edit/5
@@ -110,7 +123,7 @@ namespace ATH_UBB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Brand,Price,Description,TypeId,ReservationId,RentalId")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,price,brand,model,localization,description,isAvailable")] VehicleDetailViewModel vehicle)
         {
             if (id != vehicle.Id)
             {
@@ -121,7 +134,7 @@ namespace ATH_UBB.Controllers
             {
                 try
                 {
-                    _context.Edit(vehicle);
+                    _context.Edit(_mapper.Map<Vehicle>(vehicle));
                     _context.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -139,7 +152,7 @@ namespace ATH_UBB.Controllers
             }
             //ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "Id", vehicle.ReservationId);
             //ViewData["TypeId"] = new SelectList(_context.VehicleTypes, "Id", "Id", vehicle.TypeId);
-            return View(vehicle);
+            return View(_mapper.Map<Vehicle>(vehicle));
         }
 
         // GET: Vehicles/Delete/5
@@ -159,7 +172,7 @@ namespace ATH_UBB.Controllers
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(_mapper.Map<VehicleDetailViewModel>(vehicle));
         }
 
         // POST: Vehicles/Delete/5
@@ -171,7 +184,10 @@ namespace ATH_UBB.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Vehicles'  is null.");
             }
-            var vehicle =  _context.GetSingle(id);
+            var vehicle = _context.GetAllRecords()
+                .Include(v => v.Reserv)
+                .Include(v => v.Type)
+                .FirstOrDefault(m => m.Id == id);
             if (vehicle != null)
             {
                 _context.Delete(vehicle);

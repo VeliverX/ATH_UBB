@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ATH_UBB.Model.Vehicle>
+﻿@model IEnumerable<ATH_UBB.Models.VehicleItemViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,25 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.model)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.localization)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reserv)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalId)
+                @Html.DisplayNameFor(model => model.isAvailable)
             </th>
             <th></th>
         </tr>
@@ -40,25 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand)
+                @Html.DisplayFor(modelItem => item.model)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.localization)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reserv.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RentalId)
+                @Html.DisplayFor(modelItem => item.isAvailable)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

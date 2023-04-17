@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ATH_UBB.Service;
 using IRepositoryService;
 using RepositoryService;
-
+using ATH_UBB.Profiles;
 namespace ATH_UBB
 {
     public class Program
@@ -23,6 +23,7 @@ namespace ATH_UBB
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+            builder.Services.AddAutoMapper(typeof(VehicleProfile), typeof(RentalPoiontProfile));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
