@@ -8,6 +8,7 @@ using ATH_UBB.Profiles;
 using FluentValidation;
 using ATH_UBB.Validation;
 using ATH_UBB.Models;
+using ATH_UBB.Areas.Admin.Models;
 
 namespace ATH_UBB
 {
@@ -22,9 +23,10 @@ namespace ATH_UBB
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase("_dbcontext"));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
+            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -91,7 +93,31 @@ namespace ATH_UBB
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+            using (var scope = app.Services.CreateScope())
+            {
 
+                var _userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+
+
+
+                var createResult = _userManager.CreateAsync(
+                new ApplicationUser()
+                {
+                    UserName = "admin@ath.edu",
+                    Email = "admin@ath.edu",
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
+
+
+
+                }, "Haslo123!").Result;
+
+                var adminUser = _userManager.FindByNameAsync("admin@ath.edu").Result;
+                //var code = _userManager.GenerateEmailConfirmationTokenAsync(adminUser).Result;
+                //var result = _userManager.ConfirmEmailAsync(adminUser, code).Result;
+                _userManager.AddToRoleAsync(adminUser, "Administrator");
+
+            }
             app.Run();
         }
     }
