@@ -24,15 +24,6 @@ namespace ATH_UBB.Data
 
         public DbSet<ApplicationRole> Roles { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ApplicationRole>().HasData(
-                new ApplicationRole { Id = 1, Name = "Administrator", Description = "Admini" },
-                new ApplicationRole { Id = 2, Name = "Operator", Description = "Operatorzy" },
-                new ApplicationRole { Id = 3, Name = "Użytkownik", Description = "Userzy" }
-            );
-
-        }
+        
     }
 }

@@ -79,30 +79,47 @@ namespace ATH_UBB
 
             app.UseRouting();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.UseRouting();
+           
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapRazorPages();
+            //    endpoints.MapControllerRoute(
+            //      name: "areas",
+            //      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            //    );
+            //});
+
+            app.MapControllerRoute(
+               name: "MyArea",
+               pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.UseRouting();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+
             using (var scope = app.Services.CreateScope())
             {
 
                 var _userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                var _roleManager = scope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
 
+                var createAdminRole = _roleManager.CreateAsync(
+                    new ApplicationRole()
+                    {
+                        Name = "Administratorzy"
+                    });
+
+                var createUserRole = _roleManager.CreateAsync(
+                    new ApplicationRole()
+                    {
+                        Name = "User"
+                    });
 
 
                 var createResult = _userManager.CreateAsync(
@@ -117,10 +134,24 @@ namespace ATH_UBB
 
                 }, "Haslo123!").Result;
 
+                var createUser = _userManager.CreateAsync(
+                new ApplicationUser()
+                {
+                    UserName = "nikodemn@ath.edu",
+                    Email = "nikodem@ath.edu",
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
+
+
+
+                }, "Haslo123!").Result;
+
                 var adminUser = _userManager.FindByNameAsync("admin@ath.edu").Result;
+                var User = _userManager.FindByNameAsync("nikodem@ath.edu").Result;
                 //var code = _userManager.GenerateEmailConfirmationTokenAsync(adminUser).Result;
                 //var result = _userManager.ConfirmEmailAsync(adminUser, code).Result;
                 _userManager.AddToRoleAsync(adminUser, "Administrator");
+                _userManager.AddToRoleAsync(User, "User");
 
             }
             app.Run();
