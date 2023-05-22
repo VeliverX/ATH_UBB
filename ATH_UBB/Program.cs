@@ -95,6 +95,7 @@ namespace ATH_UBB
             app.MapControllerRoute(
                name: "MyArea",
                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+           
             app.UseRouting();
 
             app.MapControllerRoute(
@@ -112,7 +113,7 @@ namespace ATH_UBB
                 var createAdminRole = _roleManager.CreateAsync(
                     new ApplicationRole()
                     {
-                        Name = "Administratorzy"
+                        Name = "Administrator"
                     });
 
                 var createUserRole = _roleManager.CreateAsync(
@@ -146,12 +147,26 @@ namespace ATH_UBB
 
                 }, "Haslo123!").Result;
 
+                var createUser1 = _userManager.CreateAsync(
+                new ApplicationUser()
+                {
+                    UserName = "nikodemn1@ath.edu",
+                    Email = "nikodem1@ath.edu",
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
+
+
+
+                }, "Haslo123!").Result;
+
                 var adminUser = _userManager.FindByNameAsync("admin@ath.edu").Result;
                 var User = _userManager.FindByNameAsync("nikodem@ath.edu").Result;
+                var User1 = _userManager.FindByNameAsync("nikodem1@ath.edu").Result;
                 //var code = _userManager.GenerateEmailConfirmationTokenAsync(adminUser).Result;
                 //var result = _userManager.ConfirmEmailAsync(adminUser, code).Result;
                 _userManager.AddToRoleAsync(adminUser, "Administrator");
                 _userManager.AddToRoleAsync(User, "User");
+                _userManager.AddToRoleAsync(User1, "User");
 
             }
             app.Run();
