@@ -24,49 +24,31 @@ namespace ATH_UBB.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var roles = _roleManager.Roles.ToList();
-            var RoleList = roles.Select(r => new ApplicationRole()
+            var users = _userManager.Users.ToList();
+            var userList = users.Select(r => new ApplicationUser()
             {
                 Id = r.Id,
-                Name = r.Name,
+                UserName = r.UserName,
+                Email = r.Email,
+                
             });
-            return View(RoleList);
+            return View(userList);
         }
         public IActionResult Create()
         {
             return View(new ApplicationRole());
         }
-        public async Task<IActionResult> Edit(int? id)
+
+        public async Task<IActionResult> SetAdminRole(int id)
         {
-            if (id == null || _roleManager.Roles == null)
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
-
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(m => m.Id == id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            var users = _userManager.Users.ToList();
-            var usersList = users.Select(u => new ApplicationUser()
-            {
-                Id = u.Id,
-                UserName = u.UserName,
-
-
-            }
-            );
-
-            UserRolesViewModel viewModel = new UserRolesViewModel()
-            {
-
-                ApplicationRole = role,
-                Users = new SelectList(users, "Id", "UserName")
-            };
-
-            return View(viewModel);
+            await _userManager.AddToRoleAsync(user, "Administrator");
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Roles/Index");
         }
     }
 }
