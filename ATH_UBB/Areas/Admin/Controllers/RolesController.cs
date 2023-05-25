@@ -50,7 +50,7 @@ namespace ATH_UBB.Areas.Admin.Controllers
             await _userManager.AddToRoleAsync(user, "Administrator");
             //await _context.SaveChangesAsync();
 
-            return Redirect("https://localhost:7063/Admin");
+            return Redirect("/Admin");
         }
     }
 }
