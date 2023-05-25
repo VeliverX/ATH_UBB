@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ATH_UBB.Areas.Admin.Controllers
 {
@@ -39,16 +40,17 @@ namespace ATH_UBB.Areas.Admin.Controllers
             return View(new ApplicationRole());
         }
 
-        public async Task<IActionResult> SetAdminRole(int id)
+        public async Task<IActionResult> SetAdminRole(int userId)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
                 return RedirectToAction("Index");
             }
             await _userManager.AddToRoleAsync(user, "Administrator");
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Roles/Index");
+            //await _context.SaveChangesAsync();
+
+            return Redirect("https://localhost:7063/Admin");
         }
     }
 }

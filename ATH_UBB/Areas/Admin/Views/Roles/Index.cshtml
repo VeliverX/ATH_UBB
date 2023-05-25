@@ -36,9 +36,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>  
             <td>
-               <form method="post" action="@Url.Action("SetAdminRole","Roles", new {area = "Admin"})">
-                   <button type ="submit">Set Admin</button>
-               </form>
+                    <form method="post" action="@Url.Action("SetAdminRole","Roles", new {area = "Admin"})">
+                        <input type="hidden" name="userId" value="@item.Id" />
+                        <button type="submit">Set Admin</button>
+                    </form>
             </td>
 
         </tr>

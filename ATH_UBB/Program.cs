@@ -112,7 +112,7 @@ namespace ATH_UBB
                 var createAdminRole = _roleManager.CreateAsync(
                     new ApplicationRole()
                     {
-                        Name = "Administratorzy"
+                        Name = "Administrator"
                     });
 
                 var createUserRole = _roleManager.CreateAsync(
@@ -137,7 +137,7 @@ namespace ATH_UBB
                 var createUser = _userManager.CreateAsync(
                 new ApplicationUser()
                 {
-                    UserName = "nikodemn@ath.edu",
+                    UserName = "nikodem@ath.edu",
                     Email = "nikodem@ath.edu",
                     LockoutEnabled = false,
                     AccessFailedCount = 0,
