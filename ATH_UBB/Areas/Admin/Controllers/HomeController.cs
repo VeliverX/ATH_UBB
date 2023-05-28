@@ -1,5 +1,6 @@
 ﻿using ATH_UBB.Areas.Admin.Models;
 using ATH_UBB.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ATH_UBB.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Administrator")]
     public class HomeController : Controller
     {
         private readonly RoleManager<ApplicationRole> _roleManager;

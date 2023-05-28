@@ -1,6 +1,7 @@
 ﻿using ATH_UBB.Areas.Admin.Models;
 using ATH_UBB.Data;
 using ATH_UBB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,8 @@ using System;
 namespace ATH_UBB.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Administrator")]
+
     public class RolesController : Controller
     {
 
@@ -40,7 +43,7 @@ namespace ATH_UBB.Areas.Admin.Controllers
             return View(new ApplicationRole());
         }
 
-        public async Task<IActionResult> SetAdminRole(int userId)
+        public async Task<IActionResult> SetAdmin(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
@@ -48,6 +51,7 @@ namespace ATH_UBB.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
             await _userManager.AddToRoleAsync(user, "Administrator");
+            await _userManager.RemoveFromRoleAsync(user, "User");
             //await _context.SaveChangesAsync();
 
             return Redirect("/Admin");
