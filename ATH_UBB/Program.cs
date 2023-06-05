@@ -63,6 +63,7 @@ namespace ATH_UBB
             builder.Services.AddScoped(typeof(IValidator<VehicleDetailViewModel>), typeof(VehicleDetailValidator));
             builder.Services.AddScoped(typeof(IValidator<RentalPointViewModel>), typeof(RentalPointValidator));
             builder.Services.AddAutoMapper(typeof(VehicleProfile), typeof(RentalPoiontProfile));
+            builder.Services.AddAutoMapper(typeof(VehicleProfile), typeof(RentalPoiontProfile), typeof(ReservationsProfile));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

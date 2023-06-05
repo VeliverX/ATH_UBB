@@ -9,7 +9,9 @@ namespace ATH_UBB.Model
         public string Brand { get; set; }
         public double Price { get; set; }
         public string Description { get; set; }
-        
+
+        public bool IsReserved { get; set; }
+
         public Guid? TypeId { get; set; }
         public virtual VehicleType? Type{ get; set; }
         

@@ -24,6 +24,7 @@ namespace ATH_UBB.Data
 
         public DbSet<ApplicationRole> Roles { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<ATH_UBB.Models.ReservationViewModel>? ReservationViewModel { get; set; }
         
     }
 }

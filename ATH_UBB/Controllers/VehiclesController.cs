@@ -32,6 +32,7 @@ namespace ATH_UBB.Controllers
                 Brand = "makita",
                 Description = " super rower",
                 Price = 999,
+                IsReserved = true,
                 Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"},
                 RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City="Kety"}
                 

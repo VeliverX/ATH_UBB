@@ -24,6 +24,6 @@ namespace ATH_UBB.Models
         public string description { get; set; }
 
         [Display(Name = "Dostepność")]
-        public bool isAvailable { get; set; }
+        public bool IsReserved { get; set; }
     }
 }
