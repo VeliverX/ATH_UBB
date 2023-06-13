@@ -13,6 +13,7 @@ using AutoMapper;
 using ATH_UBB.Models;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ATH_UBB.Controllers
 {
@@ -32,7 +33,7 @@ namespace ATH_UBB.Controllers
                 Brand = "makita",
                 Description = " super rower",
                 Price = 999,
-                IsReserved = true,
+                IsReserved = false,
                 Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"},
                 RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City="Kety"}
                 
@@ -56,6 +57,7 @@ namespace ATH_UBB.Controllers
         }
 
         // GET: Vehicles/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if ( _context.GetAllRecords() == null)
@@ -212,6 +214,17 @@ namespace ATH_UBB.Controllers
         private bool VehicleExists(Guid id)
         {
           return (_context.GetAllRecords()?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public IActionResult EndReservation(Guid id)
+        {
+           
+            var vehicle = _context.GetSingle(id);                
+            vehicle.IsReserved = true;
+            _context.Edit(vehicle);
+            _context.Save();    
+            return Redirect("/Vehicles");
         }
     }
 }
