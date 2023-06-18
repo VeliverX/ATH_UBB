@@ -57,7 +57,7 @@ namespace ATH_UBB.Controllers
         }
 
         // GET: Vehicles/Details/5
-        [Authorize(Roles = "Administrator")]
+        
         public async Task<IActionResult> Details(Guid? id)
         {
             if ( _context.GetAllRecords() == null)
@@ -216,7 +216,7 @@ namespace ATH_UBB.Controllers
           return (_context.GetAllRecords()?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        [Authorize(Roles = "Administrator")]
+      
         public IActionResult EndReservation(Guid id)
         {
            
