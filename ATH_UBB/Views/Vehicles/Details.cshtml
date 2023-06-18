@@ -63,7 +63,7 @@
     {
         <form method="post" action="@Url.Action("EndReservation","Vehicles")">
             <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit">Usuń Reserwacje</button>
+            <button id="delete" type="submit">Usuń Reserwacje</button>
         </form>  
     }
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
