@@ -9,6 +9,7 @@ using FluentValidation;
 using ATH_UBB.Validation;
 using ATH_UBB.Models;
 using ATH_UBB.Areas.Admin.Models;
+using ATH_UBB.Model;
 
 namespace ATH_UBB
 {
@@ -106,6 +107,7 @@ namespace ATH_UBB
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
+            
 
             using (var scope = app.Services.CreateScope())
             {
@@ -157,7 +159,27 @@ namespace ATH_UBB
                 _userManager.AddToRoleAsync(adminUser, "Administrator");
                 _userManager.AddToRoleAsync(User, "User");
 
+
+                var vehiclesRepository = scope.ServiceProvider.GetService<IRepositoryService<Vehicle>>();
+                if (vehiclesRepository != null)
+                {
+                    vehiclesRepository.Add(new Vehicle
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "costam",
+                        Brand = "makita",
+                        Description = " super rower",
+                        Price = 999,
+                        IsReserved = false,
+                        Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower" },
+                        RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City = "Kety" }
+
+                    });
+                }
             }
+           
+
+
             app.Run();
         }
     }

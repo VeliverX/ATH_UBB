@@ -26,19 +26,19 @@ namespace ATH_UBB.Controllers
         {
             _context = new RepositoryService<Vehicle>(context);
 
-            _context.Add(new Vehicle()
-            {
-                Id = Guid.NewGuid(),
-                Name = "costam",
-                Brand = "makita",
-                Description = " super rower",
-                Price = 999,
-                IsReserved = false,
-                Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"},
-                RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City="Kety"}
+            //_context.Add(new Vehicle()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    Name = "costam",
+            //    Brand = "makita",
+            //    Description = " super rower",
+            //    Price = 999,
+            //    IsReserved = false,
+            //    Type = new VehicleType() { Id = Guid.NewGuid(), TypeName = "rower"},
+            //    RentalPoint = new RentalPoint() { Id = Guid.NewGuid(), Adres = "Mickiewicza 1", City="Kety"}
                 
 
-            });
+            //});
             _mapper = mapper;
             _validator = validator;
         }
